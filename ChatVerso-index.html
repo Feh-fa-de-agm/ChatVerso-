@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#171222">
+  <meta name="description" content="Seu organizador pessoal de ideias.">
+  <title>ChatVerso</title>
+  <style>
+:root{--bg:#100d18;--surface:#1c1727;--surface2:#282035;--purple:#a77aff;--purple-light:#cdb0ff;--text:#f5efff;--muted:#aaa0b9;--border:#352c43;--danger:#ff7777}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;min-height:100vh;padding-bottom:90px}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#100d18ee;backdrop-filter:blur(12px);z-index:5}
+.brand{display:flex;align-items:center;gap:12px}.brand h1{font-size:19px;margin:0 0 4px}.brand small{color:var(--muted);font-size:11px}
+.brand-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:var(--surface2);color:var(--purple-light);font-size:26px}
+.icon-btn{background:var(--surface2);border:1px solid var(--border);color:var(--purple-light);border-radius:12px;padding:10px 15px;font-size:21px}
+main{max-width:760px;margin:auto;padding:20px}.page{display:none}.page.active{display:block;animation:appear .2s ease}
+@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.welcome{padding:25px 20px;border-radius:22px;background:linear-gradient(140deg,#302044,#191426);border:1px solid #49355e}
+.eyebrow{color:var(--purple-light);font-size:10px;font-weight:bold;letter-spacing:2px}
+h2{font-size:27px;line-height:1.25;margin:12px 0}.welcome p,.page-heading p{color:var(--muted);font-size:13px;line-height:1.6}
+.primary-btn,.secondary-btn{border:0;border-radius:12px;padding:13px 17px;font-weight:bold;margin-top:12px}
+.primary-btn{color:#1a1128;background:var(--purple-light)}.primary-btn:active,.secondary-btn:active{transform:scale(.98)}
+.secondary-btn{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.full{width:100%;display:block}.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 28px}
+.stat-card{background:var(--surface);border:1px solid var(--border);padding:17px;border-radius:16px}
+.stat-card span{color:var(--muted);font-size:12px}.stat-card strong{display:block;font-size:27px;margin-top:8px;color:var(--purple-light)}
+.section-heading,.dialog-heading{display:flex;align-items:center;justify-content:space-between}.section-heading h3{font-size:17px}
+.text-btn{background:none;border:0;color:var(--purple-light)}.page-heading{margin:12px 0 20px}.page-heading h2{margin-bottom:4px}
+.search-input,.field{display:block;width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:13px;border-radius:11px;margin:12px 0;outline:none}
+.search-input:focus,.field:focus{border-color:var(--purple)}.field option{background:var(--surface)}textarea{resize:vertical}
+label{display:block;margin-top:14px;font-size:12px;color:var(--purple-light)}
+.idea-list,.project-list{display:grid;gap:12px;margin-top:16px}
+.idea-card,.project-card,.settings-card{background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:16px}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.card-title{font-size:15px;font-weight:bold;overflow-wrap:anywhere}
+.card-description{color:var(--muted);font-size:13px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;margin:10px 0}
+.tag{display:inline-block;background:#38294d;color:var(--purple-light);border-radius:20px;padding:5px 9px;font-size:10px;margin-top:10px}
+.card-actions{display:flex;gap:8px;margin-top:14px}.small-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:9px;padding:8px 11px;font-size:12px}
+.small-btn.delete{color:var(--danger)}.empty-state{color:var(--muted);text-align:center;padding:30px 15px;border:1px dashed var(--border);border-radius:14px;font-size:13px;line-height:1.6}
+.settings-card{margin:15px 0}.settings-card h3{margin-top:0}.settings-card p{color:var(--muted);font-size:13px;line-height:1.6}.muted{color:var(--muted)}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;background:#191423f5;border-top:1px solid var(--border);padding:10px 5px calc(10px + env(safe-area-inset-bottom));z-index:10}
+.nav-btn{flex:1;background:none;border:0;color:var(--muted);display:grid;justify-items:center;gap:4px}.nav-btn span{font-size:21px}.nav-btn small{font-size:10px}.nav-btn.active{color:var(--purple-light)}
+dialog{width:min(92%,480px);max-height:85vh;overflow-y:auto;background:var(--surface);border:1px solid var(--border);border-radius:18px;color:var(--text);padding:20px}
+dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}.dialog-heading h2{font-size:20px}
+.close-btn{background:var(--surface2);color:var(--text);border:0;border-radius:10px;font-size:23px;width:36px;height:36px}
+.toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:#35294a;border:1px solid #654b85;color:white;padding:12px 18px;border-radius:12px;font-size:12px;transition:.2s;z-index:20;width:max-content;max-width:90%;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  </style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="brand-icon">✦</div><div><h1>ChatVerso</h1><small>Seu universo de ideias</small></div></div>
+  <button class="icon-btn" id="backupButton" title="Backup" aria-label="Exportar backup">↥</button>
+</header>
+<main>
+  <section id="homePage" class="page active">
+    <div class="welcome"><span class="eyebrow">SEU ESPAÇO CRIATIVO</span><h2>Suas ideias merecem<br>um lugar especial.</h2><p>Guarde, organize e desenvolva suas ideias.</p><button class="primary-btn" data-action="new-idea">＋ Nova ideia</button></div>
+    <div class="stats"><div class="stat-card"><span>Ideias</span><strong id="ideaCount">0</strong></div><div class="stat-card"><span>Projetos</span><strong id="projectCount">0</strong></div></div>
+    <div class="section-heading"><h3>Ideias recentes</h3><button class="text-btn" data-page="ideasPage">Ver todas</button></div>
+    <div id="recentIdeas" class="idea-list"></div>
+  </section>
+  <section id="ideasPage" class="page">
+    <div class="page-heading"><span class="eyebrow">SEU ARQUIVO</span><h2>Minhas ideias</h2><p>Todas as suas ideias em um só lugar.</p></div>
+    <button class="primary-btn full" data-action="new-idea">＋ Adicionar ideia</button>
+    <input id="searchInput" class="search-input" type="search" placeholder="⌕ Pesquisar ideias...">
+    <select id="categoryFilter" class="field"><option value="">Todas as categorias</option><option>Aplicativos</option><option>Jogos</option><option>Vídeos</option><option>Shorts</option><option>Animaverso</option><option>Outros</option></select>
+    <div id="allIdeas" class="idea-list"></div>
+  </section>
+  <section id="projectsPage" class="page">
+    <div class="page-heading"><span class="eyebrow">SEUS PLANOS</span><h2>Meus projetos</h2><p>Transforme ideias em projetos.</p></div>
+    <button class="primary-btn full" data-action="new-project">＋ Novo projeto</button><div id="allProjects" class="project-list"></div>
+  </section>
+  <section id="settingsPage" class="page">
+    <div class="page-heading"><span class="eyebrow">PERSONALIZAÇÃO</span><h2>Configurações</h2><p>Cuide do seu universo criativo.</p></div>
+    <div class="settings-card"><h3>Armazenamento</h3><p>Suas informações são guardadas neste dispositivo.</p><button class="secondary-btn full" id="exportButton">Exportar backup</button><button class="secondary-btn full" id="importButton">Restaurar backup</button><input type="file" id="importFile" accept=".json,application/json" hidden></div>
+    <div class="settings-card"><h3>Sobre</h3><p><strong>ChatVerso 1.0</strong></p><p>Seu universo pessoal de ideias.</p><p class="muted">Feito para guardar aquilo que você ainda vai criar.</p></div>
+  </section>
+</main>
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-page="homePage"><span>⌂</span><small>Início</small></button>
+  <button class="nav-btn" data-page="ideasPage"><span>✧</span><small>Ideias</small></button>
+  <button class="nav-btn" data-page="projectsPage"><span>▣</span><small>Projetos</small></button>
+  <button class="nav-btn" data-page="settingsPage"><span>⚙</span><small>Ajustes</small></button>
+</nav>
+
+<dialog id="ideaDialog"><form id="ideaForm">
+  <div class="dialog-heading"><h2 id="ideaDialogTitle">Nova ideia</h2><button type="button" class="close-btn" data-close="ideaDialog">×</button></div>
+  <input type="hidden" id="ideaId">
+  <label for="ideaTitle">Nome da ideia</label><input class="field" id="ideaTitle" maxlength="100" placeholder="Ex.: Um novo aplicativo" required>
+  <label for="ideaDescription">Descrição</label><textarea class="field" id="ideaDescription" rows="5" placeholder="Escreva tudo o que está imaginando..."></textarea>
+  <label for="ideaCategory">Categoria</label><select class="field" id="ideaCategory"><option>Aplicativos</option><option>Jogos</option><option>Vídeos</option><option>Shorts</option><option>Animaverso</option><option>Outros</option></select>
+  <label for="ideaProject">Projeto relacionado</label><select class="field" id="ideaProject"><option value="">Nenhum projeto</option></select>
+  <button class="primary-btn full" type="submit">Salvar ideia</button>
+</form></dialog>
+<dialog id="projectDialog"><form id="projectForm">
+  <div class="dialog-heading"><h2 id="projectDialogTitle">Novo projeto</h2><button type="button" class="close-btn" data-close="projectDialog">×</button></div>
+  <input type="hidden" id="projectId">
+  <label for="projectName">Nome do projeto</label><input class="field" id="projectName" maxlength="100" placeholder="Nome do projeto" required>
+  <label for="projectDescription">Descrição</label><textarea class="field" id="projectDescription" rows="4" placeholder="Sobre o que é esse projeto?"></textarea>
+  <label for="projectStatus">Situação</label><select class="field" id="projectStatus"><option>Planejamento</option><option>Em desenvolvimento</option><option>Concluído</option><option>Pausado</option></select>
+  <button class="primary-btn full" type="submit">Salvar projeto</button>
+</form></dialog>
+<div id="toast" class="toast" role="status"></div>
+<script>
+"use strict";
+const DB_NAME="ChatVersoDB",DB_VERSION=1;
+let db,ideas=[],projects=[],toastTimer;
+const $=id=>document.getElementById(id);
+function makeId(){return (window.crypto&&crypto.randomUUID)?crypto.randomUUID():"id-"+Date.now()+"-"+Math.random().toString(16).slice(2)}
+function escapeHTML(value=""){return String(value).replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]))}
+function openDatabase(){return new Promise((resolve,reject)=>{if(!window.indexedDB){reject(new Error("IndexedDB não está disponível neste navegador."));return}const request=indexedDB.open(DB_NAME,DB_VERSION);request.onupgradeneeded=()=>{const database=request.result;if(!database.objectStoreNames.contains("ideas"))database.createObjectStore("ideas",{keyPath:"id"});if(!database.objectStoreNames.contains("projects"))database.createObjectStore("projects",{keyPath:"id"})};request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error)})}
+function getAll(storeName){return new Promise((resolve,reject)=>{const request=db.transaction(storeName,"readonly").objectStore(storeName).getAll();request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error)})}
+function saveItem(storeName,item){return new Promise((resolve,reject)=>{const transaction=db.transaction(storeName,"readwrite");transaction.objectStore(storeName).put(item);transaction.oncomplete=()=>resolve();transaction.onerror=()=>reject(transaction.error);transaction.onabort=()=>reject(transaction.error||new Error("Operação cancelada"))})}
+function deleteItem(storeName,id){return new Promise((resolve,reject)=>{const transaction=db.transaction(storeName,"readwrite");transaction.objectStore(storeName).delete(id);transaction.oncomplete=()=>resolve();transaction.onerror=()=>reject(transaction.error);transaction.onabort=()=>reject(transaction.error||new Error("Operação cancelada"))})}
+async function loadData(){[ideas,projects]=await Promise.all([getAll("ideas"),getAll("projects")]);ideas.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));projects.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));renderAll()}
+function showToast(message){const toast=$("toast");toast.textContent=message;toast.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove("show"),2600)}
+function navigate(pageId){document.querySelectorAll(".page").forEach(page=>page.classList.toggle("active",page.id===pageId));document.querySelectorAll(".nav-btn").forEach(button=>button.classList.toggle("active",button.dataset.page===pageId));window.scrollTo({top:0,behavior:"smooth"})}
+function updateProjectOptions(){const select=$("ideaProject"),previousValue=select.value;select.innerHTML='<option value="">Nenhum projeto</option>';projects.forEach(project=>{const option=document.createElement("option");option.value=project.id;option.textContent=project.name;select.appendChild(option)});if(projects.some(project=>project.id===previousValue))select.value=previousValue}
+function openIdeaForm(id=null){$("ideaForm").reset();$("ideaId").value="";$("ideaDialogTitle").textContent="Nova ideia";updateProjectOptions();if(id){const idea=ideas.find(item=>item.id===id);if(!idea)return;$("ideaId").value=idea.id;$("ideaTitle").value=idea.title;$("ideaDescription").value=idea.description||"";$("ideaCategory").value=idea.category;$("ideaProject").value=idea.projectId||"";$("ideaDialogTitle").textContent="Editar ideia"}$("ideaDialog").showModal();$("ideaTitle").focus()}
+$("ideaForm").addEventListener("submit",async event=>{event.preventDefault();const id=$("ideaId").value||makeId(),oldIdea=ideas.find(item=>item.id===id),now=Date.now();const idea={id,title:$("ideaTitle").value.trim(),description:$("ideaDescription").value.trim(),category:$("ideaCategory").value,projectId:$("ideaProject").value,createdAt:oldIdea?.createdAt||now,updatedAt:now};if(!idea.title){showToast("Digite um nome para sua ideia.");return}try{await saveItem("ideas",idea);$("ideaDialog").close();await loadData();showToast(oldIdea?"Ideia atualizada!":"Ideia salva!")}catch(error){console.error(error);showToast("Não foi possível salvar a ideia.")}});
+async function removeIdea(id){if(!confirm("Deseja realmente excluir esta ideia?"))return;try{await deleteItem("ideas",id);await loadData();showToast("Ideia excluída.")}catch(error){console.error(error);showToast("Não foi possível excluir.")}}
+function openProjectForm(id=null){$("projectForm").reset();$("projectId").value="";$("projectDialogTitle").textContent="Novo projeto";if(id){const project=projects.find(item=>item.id===id);if(!project)return;$("projectId").value=project.id;$("projectName").value=project.name;$("projectDescription").value=project.description||"";$("projectStatus").value=project.status;$("projectDialogTitle").textContent="Editar projeto"}$("projectDialog").showModal();$("projectName").focus()}
+$("projectForm").addEventListener("submit",async event=>{event.preventDefault();const id=$("projectId").value||makeId(),oldProject=projects.find(item=>item.id===id),now=Date.now();const project={id,name:$("projectName").value.trim(),description:$("projectDescription").value.trim(),status:$("projectStatus").value,createdAt:oldProject?.createdAt||now,updatedAt:now};if(!project.name){showToast("Digite um nome para o projeto.");return}try{await saveItem("projects",project);$("projectDialog").close();await loadData();showToast(oldProject?"Projeto atualizado!":"Projeto criado!")}catch(error){console.error(error);showToast("Não foi possível salvar o projeto.")}});
+async function removeProject(id){if(!confirm("Excluir este projeto? As ideias relacionadas serão mantidas sem projeto."))return;try{await deleteItem("projects",id);const relatedIdeas=ideas.filter(idea=>idea.projectId===id);await Promise.all(relatedIdeas.map(idea=>saveItem("ideas",{...idea,projectId:"",updatedAt:Date.now()})));await loadData();showToast("Projeto excluído.")}catch(error){console.error(error);showToast("Não foi possível excluir o projeto.")}}
+function renderIdeaCard(idea){const project=projects.find(p=>p.id===idea.projectId);return `<article class="idea-card"><div class="card-top"><div class="card-title">${escapeHTML(idea.title)}</div></div><p class="card-description">${escapeHTML(idea.description||"Sem descrição.")}</p><span class="tag">${escapeHTML(idea.category)}</span>${project?` <span class="tag">${escapeHTML(project.name)}</span>`:""}<div class="card-actions"><button class="small-btn" data-action="edit-idea" data-id="${escapeHTML(idea.id)}">Editar</button><button class="small-btn delete" data-action="delete-idea" data-id="${escapeHTML(idea.id)}">Excluir</button></div></article>`}
+function renderIdeas(){const query=$("searchInput").value.trim().toLowerCase(),category=$("categoryFilter").value;const filtered=ideas.filter(idea=>{const matchesText=(idea.title||"").toLowerCase().includes(query)||(idea.description||"").toLowerCase().includes(query);return matchesText&&(!category||idea.category===category)});$("allIdeas").innerHTML=filtered.length?filtered.map(renderIdeaCard).join(""):`<div class="empty-state">Nenhuma ideia encontrada.<br>Experimente adicionar uma nova!</div>`;const recent=ideas.slice(0,3);$("recentIdeas").innerHTML=recent.length?recent.map(renderIdeaCard).join(""):`<div class="empty-state">Seu universo ainda está vazio.<br>Comece guardando uma ideia!</div>`}
+function renderProjects(){$("allProjects").innerHTML=projects.length?projects.map(project=>{const count=ideas.filter(idea=>idea.projectId===project.id).length;return `<article class="project-card"><div class="card-title">${escapeHTML(project.name)}</div><p class="card-description">${escapeHTML(project.description||"Sem descrição.")}</p><span class="tag">${escapeHTML(project.status)}</span><span class="tag">${count} ideia(s)</span><div class="card-actions"><button class="small-btn" data-action="edit-project" data-id="${escapeHTML(project.id)}">Editar</button><button class="small-btn delete" data-action="delete-project" data-id="${escapeHTML(project.id)}">Excluir</button></div></article>`}).join(""):`<div class="empty-state">Você ainda não criou projetos.<br>Que tal começar um?</div>`}
+function renderAll(){$("ideaCount").textContent=ideas.length;$("projectCount").textContent=projects.length;renderIdeas();renderProjects();updateProjectOptions()}
+document.addEventListener("click",async event=>{const pageButton=event.target.closest("[data-page]");if(pageButton){navigate(pageButton.dataset.page);return}const closeButton=event.target.closest("[data-close]");if(closeButton){$(closeButton.dataset.close).close();return}const button=event.target.closest("[data-action]");if(!button)return;const{action,id}=button.dataset;switch(action){case"new-idea":openIdeaForm();break;case"edit-idea":openIdeaForm(id);break;case"delete-idea":await removeIdea(id);break;case"new-project":openProjectForm();break;case"edit-project":openProjectForm(id);break;case"delete-project":await removeProject(id);break}});
+$("searchInput").addEventListener("input",renderIdeas);$("categoryFilter").addEventListener("change",renderIdeas);
+function downloadBackup(){const backup={app:"ChatVerso",version:1,exportedAt:new Date().toISOString(),ideas,projects};const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob),link=document.createElement("a");link.href=url;link.download=`ChatVerso-backup-${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);showToast("Backup exportado!")}
+$("backupButton").addEventListener("click",downloadBackup);$("exportButton").addEventListener("click",downloadBackup);$("importButton").addEventListener("click",()=>$("importFile").click());
+$("importFile").addEventListener("change",event=>{const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=async()=>{try{const data=JSON.parse(reader.result);const validIdea=item=>item&&typeof item.id==="string"&&typeof item.title==="string"&&typeof item.description==="string"&&typeof item.category==="string";const validProject=item=>item&&typeof item.id==="string"&&typeof item.name==="string"&&typeof item.description==="string"&&typeof item.status==="string";if(data.app!=="ChatVerso"||data.version!==1||!Array.isArray(data.ideas)||!Array.isArray(data.projects)||!data.ideas.every(validIdea)||!data.projects.every(validProject)||data.ideas.length>10000||data.projects.length>10000)throw new Error("Backup inválido");if(!confirm("Restaurar este backup? Os dados atuais serão substituídos."))return;await new Promise((resolve,reject)=>{const transaction=db.transaction(["ideas","projects"],"readwrite");const ideaStore=transaction.objectStore("ideas"),projectStore=transaction.objectStore("projects");ideaStore.clear();projectStore.clear();data.ideas.forEach(item=>ideaStore.put(item));data.projects.forEach(item=>projectStore.put(item));transaction.oncomplete=resolve;transaction.onerror=()=>reject(transaction.error);transaction.onabort=()=>reject(transaction.error||new Error("Importação cancelada"))});await loadData();showToast("Backup restaurado!")}catch(error){console.error(error);showToast("Arquivo inválido ou incompatível.")}finally{$("importFile").value=""}};reader.readAsText(file)});
+async function initialize(){try{db=await openDatabase();await loadData()}catch(error){console.error(error);showToast("Erro ao abrir o armazenamento local. Abra pelo Chrome usando um servidor local (localhost).")}}
+initialize();
+</script>
+</body>
+</html>
